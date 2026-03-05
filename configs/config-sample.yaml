@@ -1,0 +1,31 @@
+server:
+  host: 0.0.0.0
+  port: 8080
+  mode: release
+  read_timeout: 30s
+  write_timeout: 30s
+  shutdown_timeout: 5s
+
+database:
+  driver: mysql
+  host: localhost
+  port: 3306
+  username: root
+  password: your_password
+  database: sds_admin
+  charset: utf8mb4
+  max_open_conns: 100
+  max_idle_conns: 10
+  conn_max_lifetime: 1h
+
+log:
+  level: info
+  format: json
+  output: logs/sds-admin.log
+  max_size: 100
+  max_backups: 3
+  max_age: 7
+  compress: true
+
+swagger:
+  enabled: true

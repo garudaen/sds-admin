@@ -1,0 +1,1112 @@
+basePath: /api/v1
+definitions:
+  sds-admin_internal_dto.CreateDomainRequest:
+    properties:
+      description:
+        type: string
+      domainName:
+        type: string
+      recursive:
+        type: boolean
+    required:
+    - domainName
+    type: object
+  sds-admin_internal_dto.CreateRecordRequest:
+    properties:
+      host:
+        description: |-
+          Host record, e.g. www, @, *.
+          主机记录，如 www, @, *
+        example: www
+        type: string
+      mxPriority:
+        description: |-
+          MX record priority. Only required for MX records, value range 0-65535.
+          MX记录优先级。仅MX记录需要，取值范围0-65535
+        example: 10
+        type: integer
+      recordTypeId:
+        description: |-
+          Record type ID (1=A, 2=AAAA, 3=CNAME, 4=MX, etc.).
+          记录类型ID（1=A, 2=AAAA, 3=CNAME, 4=MX等）
+        example: 1
+        type: integer
+      remark:
+        description: |-
+          Remark or description for this record.
+          记录的备注或说明
+        example: Web server
+        type: string
+      ttl:
+        description: |-
+          Time to live in seconds. Default is 300.
+          生存时间（秒），默认为300
+        example: 300
+        type: integer
+      values:
+        description: |-
+          Record values. At least one value is required.
+          记录值列表。至少需要一个值
+        items:
+          $ref: '#/definitions/sds-admin_internal_dto.RecordValueInput'
+        minItems: 1
+        type: array
+    required:
+    - host
+    - recordTypeId
+    - values
+    type: object
+  sds-admin_internal_dto.CreateRecordTypeRequest:
+    properties:
+      description:
+        maxLength: 255
+        type: string
+      name:
+        maxLength: 20
+        type: string
+    required:
+    - name
+    type: object
+  sds-admin_internal_dto.DomainResponse:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      domainName:
+        type: string
+      id:
+        type: integer
+      recursive:
+        type: boolean
+      status:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  sds-admin_internal_dto.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      detail:
+        type: string
+      message:
+        type: string
+    type: object
+  sds-admin_internal_dto.RecordListResponse:
+    properties:
+      records:
+        description: |-
+          Record list.
+          记录列表
+        items:
+          $ref: '#/definitions/sds-admin_internal_dto.RecordResponse'
+        type: array
+      total:
+        description: |-
+          Total number of records.
+          记录总数
+        example: 10
+        type: integer
+    type: object
+  sds-admin_internal_dto.RecordResponse:
+    properties:
+      createdAt:
+        description: |-
+          Creation time.
+          创建时间
+        example: "2024-01-01 12:00:00"
+        type: string
+      disabled:
+        description: |-
+          Whether the record is disabled.
+          记录是否禁用
+        example: false
+        type: boolean
+      domainId:
+        description: |-
+          Domain ID that this record belongs to.
+          此记录所属的域名ID
+        example: 1
+        type: integer
+      domainName:
+        description: |-
+          Domain name.
+          域名
+        example: example.com
+        type: string
+      host:
+        description: |-
+          Host record.
+          主机记录
+        example: www
+        type: string
+      id:
+        description: |-
+          Record ID.
+          记录ID
+        example: 1
+        type: integer
+      mxPriority:
+        description: |-
+          MX record priority. Only present for MX records.
+          MX记录优先级。仅MX记录有此字段
+        example: 10
+        type: integer
+      recordType:
+        description: |-
+          Record type name (A, AAAA, CNAME, MX, etc.).
+          记录类型名称（A, AAAA, CNAME, MX等）
+        example: A
+        type: string
+      recordTypeId:
+        description: |-
+          Record type ID.
+          记录类型ID
+        example: 1
+        type: integer
+      remark:
+        description: |-
+          Remark or description.
+          备注或说明
+        example: Web server
+        type: string
+      ttl:
+        description: |-
+          Time to live in seconds.
+          生存时间（秒）
+        example: 300
+        type: integer
+      updatedAt:
+        description: |-
+          Last update time.
+          最后更新时间
+        example: "2024-01-01 12:00:00"
+        type: string
+      values:
+        description: |-
+          Record values.
+          记录值列表
+        items:
+          $ref: '#/definitions/sds-admin_internal_dto.RecordValueResponse'
+        type: array
+    type: object
+  sds-admin_internal_dto.RecordTypeResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  sds-admin_internal_dto.RecordValueInput:
+    properties:
+      clientCidr:
+        description: |-
+          Client IP CIDR for smart DNS resolution. Should not be set for default values.
+          客户端IP网段，用于智能DNS解析。默认值不应设置此字段
+          @example 192.168.1.0/24
+        example: 192.168.1.0/24
+        type: string
+      isDefault:
+        description: |-
+          Whether this is the default value. Required for A/AAAA/CNAME records.
+          是否为默认值。A/AAAA/CNAME记录必须有一个默认值
+        example: true
+        type: boolean
+      value:
+        description: |-
+          Record value, e.g. IP address for A record, domain for CNAME.
+          记录值，如A记录的IP地址，CNAME记录的域名
+          @example 192.168.1.1
+        example: 192.168.1.1
+        type: string
+    required:
+    - value
+    type: object
+  sds-admin_internal_dto.RecordValueResponse:
+    properties:
+      clientCidr:
+        description: |-
+          Client IP CIDR for smart DNS resolution.
+          客户端IP网段，用于智能DNS解析
+        example: 192.168.1.0/24
+        type: string
+      id:
+        description: |-
+          Record value ID.
+          记录值ID
+        example: 1
+        type: integer
+      isDefault:
+        description: |-
+          Whether this is the default value.
+          是否为默认值
+        example: true
+        type: boolean
+      value:
+        description: |-
+          Record value.
+          记录值
+        example: 192.168.1.1
+        type: string
+    type: object
+  sds-admin_internal_dto.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
+  sds-admin_internal_dto.UpdateDomainConfigRequest:
+    properties:
+      description:
+        type: string
+      recursive:
+        type: boolean
+    type: object
+  sds-admin_internal_dto.UpdateRecordRequest:
+    properties:
+      disabled:
+        description: |-
+          Whether the record is disabled.
+          记录是否禁用
+        example: false
+        type: boolean
+      host:
+        description: |-
+          Host record, e.g. www, @, *.
+          主机记录，如 www, @, *
+        example: www
+        type: string
+      mxPriority:
+        description: |-
+          MX record priority. Only required for MX records, value range 0-65535.
+          MX记录优先级。仅MX记录需要，取值范围0-65535
+        example: 10
+        type: integer
+      remark:
+        description: |-
+          Remark or description for this record.
+          记录的备注或说明
+        example: Web server
+        type: string
+      ttl:
+        description: |-
+          Time to live in seconds. Default is 300.
+          生存时间（秒），默认为300
+        example: 300
+        type: integer
+      values:
+        description: |-
+          Record values. At least one value is required.
+          记录值列表。至少需要一个值
+        items:
+          $ref: '#/definitions/sds-admin_internal_dto.RecordValueInput'
+        minItems: 1
+        type: array
+    required:
+    - host
+    - values
+    type: object
+  sds-admin_internal_dto.UpdateRecordTypeRequest:
+    properties:
+      description:
+        maxLength: 255
+        type: string
+      name:
+        maxLength: 20
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: SDS Admin API for domain management
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: SDS Admin API
+  version: "1.0"
+paths:
+  /domains:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of all domains
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/sds-admin_internal_dto.DomainResponse'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: List all domains
+      tags:
+      - domains
+    post:
+      consumes:
+      - application/json
+      description: Create a new domain with the provided information
+      parameters:
+      - description: Domain creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/sds-admin_internal_dto.CreateDomainRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.DomainResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Create a new domain
+      tags:
+      - domains
+  /domains/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a domain by its ID (soft delete)
+      parameters:
+      - description: Domain ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Delete a domain
+      tags:
+      - domains
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a single domain by its ID
+      parameters:
+      - description: Domain ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.DomainResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Get a domain by ID
+      tags:
+      - domains
+    put:
+      consumes:
+      - application/json
+      description: Update an existing domain with new information
+      parameters:
+      - description: Domain ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Domain update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/sds-admin_internal_dto.CreateDomainRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.DomainResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Update a domain
+      tags:
+      - domains
+  /domains/{id}/config:
+    patch:
+      consumes:
+      - application/json
+      description: Update domain config (description and recursive)
+      parameters:
+      - description: Domain ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Domain config update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/sds-admin_internal_dto.UpdateDomainConfigRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.DomainResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Update domain config
+      tags:
+      - domains
+  /domains/{id}/disable:
+    post:
+      consumes:
+      - application/json
+      description: Disable a domain by setting its status to inactive
+      parameters:
+      - description: Domain ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.DomainResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Disable a domain
+      tags:
+      - domains
+  /domains/{id}/enable:
+    post:
+      consumes:
+      - application/json
+      description: Enable a domain by setting its status to active
+      parameters:
+      - description: Domain ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.DomainResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Enable a domain
+      tags:
+      - domains
+  /domains/{id}/records:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of DNS records for the specified domain
+      parameters:
+      - description: Domain ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.RecordListResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: List DNS records for a domain
+      tags:
+      - records
+    post:
+      consumes:
+      - application/json
+      description: Create a new DNS resolution record under the specified domain
+      parameters:
+      - description: Domain ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Record creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/sds-admin_internal_dto.CreateRecordRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.RecordResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Create a new DNS record
+      tags:
+      - records
+  /domains/{id}/records/{recordId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a DNS record by its ID (soft delete)
+      parameters:
+      - description: Domain ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Record ID
+        in: path
+        name: recordId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Delete a DNS record
+      tags:
+      - records
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a single DNS record by its ID
+      parameters:
+      - description: Domain ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Record ID
+        in: path
+        name: recordId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.RecordResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Get a record by ID
+      tags:
+      - records
+    put:
+      consumes:
+      - application/json
+      description: Update an existing DNS record with new information
+      parameters:
+      - description: Domain ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Record ID
+        in: path
+        name: recordId
+        required: true
+        type: integer
+      - description: Record update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/sds-admin_internal_dto.UpdateRecordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.RecordResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Update a DNS record
+      tags:
+      - records
+  /domains/{id}/records/{recordId}/disable:
+    post:
+      consumes:
+      - application/json
+      description: Disable a DNS record by setting its disabled flag to true
+      parameters:
+      - description: Domain ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Record ID
+        in: path
+        name: recordId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.RecordResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Disable a DNS record
+      tags:
+      - records
+  /domains/{id}/records/{recordId}/enable:
+    post:
+      consumes:
+      - application/json
+      description: Enable a DNS record by setting its disabled flag to false
+      parameters:
+      - description: Domain ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Record ID
+        in: path
+        name: recordId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.RecordResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Enable a DNS record
+      tags:
+      - records
+  /record-types:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of all record types
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/sds-admin_internal_dto.RecordTypeResponse'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: List all record types
+      tags:
+      - record-types
+    post:
+      consumes:
+      - application/json
+      description: Create a new record type with the provided information
+      parameters:
+      - description: Record type creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/sds-admin_internal_dto.CreateRecordTypeRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.RecordTypeResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Create a new record type
+      tags:
+      - record-types
+  /record-types/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a record type by its ID (soft delete)
+      parameters:
+      - description: Record Type ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Delete a record type
+      tags:
+      - record-types
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a single record type by its ID
+      parameters:
+      - description: Record Type ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.RecordTypeResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Get a record type by ID
+      tags:
+      - record-types
+    put:
+      consumes:
+      - application/json
+      description: Update an existing record type with new information
+      parameters:
+      - description: Record Type ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Record type update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/sds-admin_internal_dto.UpdateRecordTypeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/sds-admin_internal_dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sds-admin_internal_dto.RecordTypeResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/sds-admin_internal_dto.ErrorResponse'
+      summary: Update a record type
+      tags:
+      - record-types
+securityDefinitions:
+  ApiKeyAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
