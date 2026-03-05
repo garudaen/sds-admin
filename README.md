@@ -2,6 +2,8 @@
 
 A modern DNS management system built with Golang (Gin) backend and Vue.js 3 frontend.
 
+English | [简体中文](./README-CN.md)
+
 ## Features
 
 - **Domain Management**: Add, edit, delete, enable/disable domains
