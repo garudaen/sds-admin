@@ -17,6 +17,7 @@ bin/
 vendor/
 
 .env
+configs/config.yaml
 configs/config.local.yaml
 *.pid
 
@@ -28,3 +29,6 @@ Thumbs.db
 
 logs/
 *.log
+
+fe/node_modules/
+pub/
